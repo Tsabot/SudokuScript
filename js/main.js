@@ -1,17 +1,20 @@
 let Tab = [[],[],[],[],[],[],[],[],[]];
-let actualStocksManquantX;
+let actualMissingStockX;
 let nbManquant;
 document.getElementById("launch").addEventListener("click", start);
-document.getElementById("fill").addEventListener("click", fillTable);
+document.getElementById("fill").addEventListener("click", fillTableTest);
+document.getElementById("fill2").addEventListener("click", fillTableMore);
+document.getElementById("clear").addEventListener("click", clearTable);
 function start(){
+    console.log("############################")
+    console.log("############################")
+    console.log("--------CORRECTION----------")
+    console.log("############################")
+    console.log("############################")
     intoTable();
     for(let x = 0; x <= 8; x++){
-        completterX(x); 
+        completeX(x); 
     }
-    /*if(nbManquant != 0){
-        console.log(`Il manque ${nbManquant} chiffres donc start again`);
-        start();
-    }*/
 }
 function intoTable(){
     for(let x = 0; x <= 8; x++){
@@ -20,7 +23,57 @@ function intoTable(){
         }
     }
 }
-function fillTable(){
+function clearTable(){
+    Tab = [[],[],[],[],[],[],[],[],[]];
+    actualMissingStockX = null;
+    nbManquant = null;
+    for(let x = 0; x <= 8; x++){
+        for(let y = 0; y <= 8; y++){
+           document.getElementById("input" + x + y).value = null;
+        }
+    }
+}
+function fillTableMore(){
+    document.getElementById("input" + 0 + 1).value = 3;
+    document.getElementById("input" + 0 + 2).value = 2;
+    document.getElementById("input" + 0 + 4).value = 5;
+    document.getElementById("input" + 0 + 6).value = 1;
+    document.getElementById("input" + 1 + 1).value = 4;
+    document.getElementById("input" + 1 + 3).value = 6;
+    document.getElementById("input" + 1 + 5).value = 2;
+    document.getElementById("input" + 1 + 8).value = 7;
+    document.getElementById("input" + 2 + 0).value = 1;
+    document.getElementById("input" + 2 + 3).value = 7;
+    document.getElementById("input" + 2 + 6).value = 5;
+    document.getElementById("input" + 2 + 7).value = 4;
+    
+    document.getElementById("input" + 3 + 2).value = 1;
+    document.getElementById("input" + 3 + 4).value = 9;
+    document.getElementById("input" + 3 + 7).value = 7;
+    document.getElementById("input" + 3 + 8).value = 3;
+    document.getElementById("input" + 4 + 0).value = 8;
+    document.getElementById("input" + 4 + 2).value = 6;
+    document.getElementById("input" + 4 + 5).value = 3;
+    document.getElementById("input" + 4 + 6).value = 2;
+    document.getElementById("input" + 5 + 1).value = 7;
+    document.getElementById("input" + 5 + 3).value = 8;
+    document.getElementById("input" + 5 + 4).value = 4;
+    document.getElementById("input" + 5 + 7).value = 9;
+
+    document.getElementById("input" + 6 + 0).value = 3;
+    document.getElementById("input" + 6 + 3).value = 9;
+    document.getElementById("input" + 6 + 4).value = 6;
+    document.getElementById("input" + 6 + 8).value = 8;
+    document.getElementById("input" + 7 + 1).value = 8;
+    document.getElementById("input" + 7 + 2).value = 4;
+    document.getElementById("input" + 7 + 5).value = 7;
+    document.getElementById("input" + 7 + 8).value = 1;
+    document.getElementById("input" + 8 + 0).value = 5;
+    document.getElementById("input" + 8 + 5).value = 4;
+    document.getElementById("input" + 8 + 6).value = 7;
+    document.getElementById("input" + 8 + 7).value = 3;
+}
+function fillTableTest(){
     for(let x = 0; x <= 8; x++){
         if(x != 5 && x != 1){
             document.getElementById("input" + 0 + x).value = x + 1;
@@ -39,89 +92,106 @@ function fillTable(){
     document.getElementById("input" + 2 + 4).value = 1;
     document.getElementById("input" + 2 + 5).value = 3;
     document.getElementById("input" + 1 + 5).value = 2;
+    document.getElementById("input" + 5 + 5).value = 9;
+    document.getElementById("input" + 4 + 7).value = 1;
+    document.getElementById("input" + 8 + 8).value = 7;
 }
 function getRandomArbitrary(min, max) {
     return Math.round( Math.random() * (max - min) + min );;
 }
 function writeValue(x, y, newValue){
-    console.log("complete value = " + newValue + ' at X =' + x + " and  Y =" + y);
     Tab[x][y] = `${newValue}`;
     document.getElementById("input" + x + y).value = `${newValue}`;;
-    posValX = search(actualStocksManquantX[1], newValue);
-    posValY = search(actualStocksManquantX[0], y);
-    actualStocksManquantX[0].splice(posValY, 1);
-    actualStocksManquantX[1].splice(posValX, 1);
-    //Improvement need suppression valeur déja ajouter dans tab de stockManquantX
+    posValX = search(actualMissingStockX[1], newValue);
+    posValY = search(actualMissingStockX[0], y);
+    actualMissingStockX[0].splice(posValY, 1);
+    actualMissingStockX[1].splice(posValX, 1);
+    console.log(`Wrote ${newValue} at x=${x} and y=${y}`);
+    //Improvement need delete val already in array missingStockX
 }
-function completterX(X){
-    const stockManquantX = check_manquantX(X); //stockManquantX [0] = pos; stockManquantX[1]=val;
-    actualStocksManquantX = check_manquantX(X);
-    console.log("\nChangement de X");
-    for(let i = 0; i < stockManquantX[1].length; i++){
+function completeX(X){
+    const missingStockX = check_manquantX(X); //missingStockX [0] = pos; missingStockX[1]=val;
+    actualMissingStockX = check_manquantX(X);
+    for(let i = 0; i < missingStockX[1].length; i++){
         console.log("\nChangement de i");
-        console.log(actualStocksManquantX[0]);
-        console.log(actualStocksManquantX[1]);
-        if (actualStocksManquantX[0].length == 1){
+        console.log(actualMissingStockX[0]);
+        console.log(actualMissingStockX[1]);
+        if(actualMissingStockX[0].length == 1){
             console.log("nb left x = 1");
             //S'il ne manque qu'une valeur sur X, la mettre
-            writeValue(X, actualStocksManquantX[0][0], actualStocksManquantX[1][0]);
+            if(findIfPossible(actualMissingStockX[1], actualMissingStockX[1][0]) == true){
+                writeValue(X, actualMissingStockX[0][0], actualMissingStockX[1][0]);
+            }
         }
         else {
-            stockAbsY = check_manquantY(actualStocksManquantX[0][0]);//A revoir
-            if (stockAbsY[0].length == 1){
+            stockAbsY = check_manquantY(actualMissingStockX[0][0]);//A revoir
+            if(stockAbsY[0].length == 1){
                 console.log("nb left y = 1");
                 //S'il ne manque qu'une valeur sur Y, la mettre
-                writeValue(X, stockManquantX[0][i], stockAbsY[1][0]);
+                if(findIfPossible(actualMissingStockX[1], stockAbsY[1][0])  == true){
+                    writeValue(X, missingStockX[0][i], stockAbsY[1][0]);
+                }
             }
             else {
-                stockAbsCube = checkAbs_Cube(getXCube(X),getYCube(actualStocksManquantX[0][i]));//[[posX],[posY]],[Val]
-                if (stockAbsCube[1].length == 1){
+                stockAbsCube = checkAbs_Cube(getXCube(X), getYCube(actualMissingStockX[0][0]));//[[posX],[posY]],[Val]
+                if(stockAbsCube[1].length == 1){
                     console.log("nb cube x = 1");
                     //S'il ne manque qu'une valeur dans le Cube, la mettre
-                    writeValue(stockAbsCube[0][0][0], stockAbsCube[0][1][0], stockAbsCube[1][0]);
+                    if(findIfPossible(actualMissingStockX[1], stockAbsCube[1][0])  == true){
+                        writeValue(stockAbsCube[0][0][0], stockAbsCube[0][1][0], stockAbsCube[1][0]);
+                    }
                 }
                 else{
                     //check sur chaque x x+1 x+2 si il y a pas de pb
-                    stockPossibilite = findPossible(actualStocksManquantX, stockAbsY, stockAbsCube);
+                    console.log(actualMissingStockX[1])
+                    console.log(stockAbsY[1])
+                    console.log(stockAbsCube[1])
+                    stockPossibilite = findPossible(actualMissingStockX, stockAbsY, stockAbsCube);
                     if(stockPossibilite.length == 1){
                         console.log("nb possibility = 1");
-                        writeValue(X, stockManquantX[0][i],  stockPossibilite[0]);
+                        writeValue(X, missingStockX[0][i],  stockPossibilite[0]);
                     }
                     else{
-                        //Improvement: check les cases sur tab cotès voir si une des possiblité est uniquement possible la bas.
-                        let stockFinal = checkXY(X,actualStocksManquantX[0][i]);
-                        let closeCubeStock = Array();
+                        let stockFinal = checkXY(X, actualMissingStockX[0][i]);
+                        console.log(`stock possibilite = ${stockPossibilite}`);
+                        console.log(stockFinal);
+                        let newStockPossible = Array();
                         stockPossibilite.forEach( possibleVal =>{
+                            let deleteThisValue = 0;
                             for(nbTable = 0; nbTable < 4; nbTable++){
-                                if(stockFinal[nbTable].length == 1){
-                                    closeCubeStock.push(stockFinal[nbTable][0]);
+                                if(stockFinal[nbTable][1].length == 1){
+                                    if(possibleVal == stockFinal[nbTable][1]){
+                                        deleteThisValue = 1
+                                        //writeValue(stockFinal[nbTable][0][0], stockFinal[nbTable][0][1],  stockFinal[nbTable][1]);
+                                    }
+                                }
+                                else if(stockFinal[nbTable][1].length <= 3){
+                                    stockFinal[nbTable][1].forEach( alsoNeededValue => {
+                                        if(possibleVal == alsoNeededValue){
+                                            deleteThisValue = 1
+                                        }
+                                    });
                                 }
                             }
-                        });
-                        let posCube = 0;
-                        console.log(`stock possibilite = ${stockPossibilite}`);
-                        console.log(`stockclosecube = ${closeCubeStock}`);
-                        closeCubeStock.forEach(possibleElse=>{
-                            if(stockPossibilite[posCube] == possibleElse){
-                                stockPossibilite.splice(posCube, 1);
+                            if(deleteThisValue == 0){
+                                newStockPossible.push(possibleVal);
                             }
-                            posCube++;
                         });
+                        stockPossibilite = newStockPossible;
+                        console.log(`stock possibilite = ${newStockPossible}`);
                         if(stockPossibilite.length == 1){
                             console.log("nb possibility after = 1");
-                            writeValue(X, actualStocksManquantX[0][0],  stockPossibilite[0]);
+                            writeValue(X, actualMissingStockX[0][0],  stockPossibilite[0]);
                         }
                         else{
                             if(stockPossibilite.length != 0){
                                 console.log("nb possibility > 1");
                                 console.log(`stock possibilite = ${stockPossibilite}`);
-                                console.log(stockPossibilite.length);
                                 let randomY = getRandomArbitrary(0, stockPossibilite.length-1);
-                                console.log(randomY);
-                                writeValue(X, actualStocksManquantX[0][0],  stockPossibilite[randomY]);
+                                writeValue(X, actualMissingStockX[0][0],  stockPossibilite[randomY]);
                             }
                             else{
-                                console.log("Nombre introuvable sur x = " + X + " Y = " + stockManquantX[0][i]);
+                                console.log("Nombre introuvable sur x = " + X + " Y = " + missingStockX[0][i]);
                                 nbManquant++;
                             }
                         }
@@ -132,6 +202,7 @@ function completterX(X){
     }
 }
 function search(table, value){
+    //Find a value in the table
     for(let j = 0; j < table.length; j++){
         if(table[j] == value){
             return j;
@@ -139,27 +210,36 @@ function search(table, value){
     }
     return false;
 }
+function findIfPossible(possibleValue, ourValue){
+    possibleValue.forEach(possibleV => {
+        if(ourValue == possibleV){
+            return true;
+        }
+    });
+    return false;
+}
 function getYCube(Y){
-    //trouve le Y du tableau le plus proche de la valeur donnée
+    //Identify the cube wich correspond to this Y exemple for the Y = 0,1,2, it's the first Cube on Y ...
     if (Y == 0 || Y == 1 || Y == 2){
-        bonY = 0;
+        goodY = 0;
     }
     else if (Y == 3 || Y == 4 || Y == 5){
-        bonY = 3;
-    }else bonY = 6;
-    return bonY;
+        goodY = 3;
+    }else goodY = 6;
+    return goodY;
 }
 function getXCube(X){
-    //trouve le Y de base du tableau le plus proche de la valeur donnée
+    //Identify the cube wich correspond to this X exemple for the x = 0,1,2, it's the first Cube on X ...
     if (X == 0 || X == 1 || X == 2){
-        bonX = 0;
+        goodX = 0;
     }
     else if (X == 3 || X == 4 || X == 5){
-        bonX = 3;
-    }else bonX = 6;
-    return bonX;
+        goodX = 3;
+    }else goodX = 6;
+    return goodX;
 }
 function getCloseCube(X, Y){
+    //Return wich cube have to be checked when we send Ours exemple, if we send the cube at 0 - 0 we send [0,2,2,0] for [Top,Rigth,Bottom,Left] because there are 2 on right and 2 on bottom
     if(X == 0 && Y == 0){
         return [0,2,2,0];
     }
@@ -189,27 +269,49 @@ function getCloseCube(X, Y){
     }
 }
 function checkXY(X,Y){
+    //Must find the number wich are missing on the horizontaly or verticaly close Cube and send them back
     let trueX = getXCube(X);
     let trueY = getYCube(Y);
-    let stockManquantClose = Array(Array(),Array(),Array(),Array());
+    let stockMissingClose = Array();
     let whichCube = getCloseCube(trueY,trueX);
     for(let ix = 0; ix < 4; ix++){
-        if(ix == 0 || ix == 2){
-            stockManquantClose[ix] = checkAbs_Cube(trueX+ whichCube[ix], trueY );
-        }
-        else if(ix == 1 || ix == 3){
-            stockManquantClose[ix] = checkAbs_Cube(trueX , trueY+ whichCube[ix]);
+        //Must check 4 closest cube
+        if(whichCube[ix] == 1){
+            if(ix == 0 || ix == 2){
+                stockMissingClose.push(checkAbs_Cube(trueX + 3, trueY ));
+            }else{
+                stockMissingClose.push(checkAbs_Cube(trueX , trueY + 3));
+            }
+        }else if(whichCube[ix] == 2){
+            if(ix == 0 || ix == 2){
+                stockMissingClose.push(checkAbs_Cube(trueX + 3, trueY ));
+                stockMissingClose.push(checkAbs_Cube(trueX + 6, trueY ));
+            }else{
+                stockMissingClose.push(checkAbs_Cube(trueX , trueY + 3));
+                stockMissingClose.push(checkAbs_Cube(trueX , trueY + 6));
+            }
+        }else if(whichCube[ix] == -1){
+            if(ix == 0 || ix == 2){
+                stockMissingClose.push(checkAbs_Cube(trueX - 3, trueY ));
+            }else{
+                stockMissingClose.push(checkAbs_Cube(trueX , trueY - 3));
+            }
+        }else if(whichCube[ix] == -2){
+            if(ix == 0 || ix == 2){
+                stockMissingClose.push(checkAbs_Cube(trueX - 3, trueY ));
+                stockMissingClose.push(checkAbs_Cube(trueX - 6, trueY ));
+            }else{
+                stockMissingClose.push(checkAbs_Cube(trueX , trueY - 3));
+                stockMissingClose.push(checkAbs_Cube(trueX , trueY - 6));
+            }
         }
     }
-    return stockManquantClose;
+    return stockMissingClose;
 }
 function findPossible(absX, absY, absC){
     let stockPossible = Array(Array(1,2,3,4,5,6,7,8,9),Array(0,0,0,0,0,0,0,0,0));
-    let stockBon = [];
+    let stockgood = [];
     let pos = 0;
-    console.log(absX[1]);
-    console.log(absY[1]);
-    console.log(absC[1]);
     stockPossible[0].forEach(valPos => {
         absX[1].forEach( nbX =>{
             if(nbX ==  valPos){
@@ -227,15 +329,14 @@ function findPossible(absX, absY, absC){
             }
         });
         if(stockPossible[1][pos] == 3){
-            stockBon.push(valPos);
+            stockgood.push(valPos);
         }
         pos++;
     });
-    console.log(stockPossible[0]);
-    console.log(stockPossible[1]);
-    return stockBon;
+    return stockgood;
 }
-function checkAbs_Cube(X,Y){
+function checkAbs_Cube(X,Y){//TODO has errors [[[X][Y]][4]]
+    //Take the coord of the cube and send wich numbers are missing and where are numbers missing
     let stockPossibleVal = Array(1,2,3,4,5,6,7,8,9);
     let stockPresent = [[],[],[]];
     for(let h = 0; h <= 2; h++){
